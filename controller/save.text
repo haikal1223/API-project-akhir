@@ -1,0 +1,12 @@
+var data = req.body
+        var sql = `INSERT INTO products Set ?`
+        conn.query(sql,data,(err,result) => {
+            if(err) return res.status(500).send(err)
+
+            var sql = `SELECT * FROM products`
+            conn.query(sql,(err1,result) => {
+                if (err1) return res.status(500).send(err1)
+
+                return res.status(200).send(result)
+            })
+        })
