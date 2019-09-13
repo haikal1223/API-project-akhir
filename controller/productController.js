@@ -8,15 +8,13 @@ module.exports = {
         p.price, p.description,
         category.name AS category,
         brand.name AS brand,
-        img_p.image AS images,
+        p.image,
         p.stock
         FROM products p
         JOIN category
         ON p.categoryid = category.id
         JOIN brand
         ON p.brandid = brand.id
-        JOIN image_product img_p
-        ON p.id = img_p.productid
         where isdeleted=1 `
 
         conn.query(sql,(error,result)=>{
@@ -38,14 +36,12 @@ module.exports = {
                 const { image } = req.files;//image nya sama kaya di ui
                 console.log(image)
                 const imagePath = image ? path + '/' + image[0].filename : null;
-                console.log(imagePath)
+                // console.log(imagePath)
     
                 console.log(req.body.data)
                 const data = JSON.parse(req.body.data);
-                console.log(data)
-                data.images = imagePath;
-                data.id = req.user.id
-                
+                // console.log(data)
+                data.image = imagePath;
                 var sql = 'INSERT INTO products SET ?';
                 conn.query(sql, data, (err, results) => {
                     if(err) {
@@ -55,7 +51,7 @@ module.exports = {
                     }
                    
                     console.log(results);
-                    sql = `SELECT * FROM products Where id = ${req.user.id} `;
+                    sql = `SELECT * FROM products `;
                     conn.query(sql, (err, results) => {
                         if(err) {
                             console.log(err.message);
