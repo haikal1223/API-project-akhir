@@ -6,7 +6,7 @@ const router = express.Router()
 router.get('/getbrand',brandController.getBrand)
 router.get('/getspecifiedbrand/:id',brandController.getCertainBrand)
 router.post('/addbrand',brandController.addBrand)
-router.put('/editbrand',brandController.editBrand)
-router.delete('/deletebrand',brandController.deleteBrand)
+router.put('/editbrand/:id',brandController.editBrand)
+router.delete('/deletebrand/:id',brandController.deleteBrand)
 
 module.exports =router

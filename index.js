@@ -9,12 +9,15 @@ const app = express()
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : false}))
+app.use(express.static('public'))//munculin gambar kalo pake multer
+// app.use(bearerToken())
 
-const { categoryRouter, brandRouter, productRouter, jumboSliderRouter, searchBoxRouter  } = require('./routers')
+const { categoryRouter, brandRouter, productRouter, jumboSliderRouter, searchBoxRouter, usersRouter } = require('./routers')
 app.use('/category',categoryRouter)
 app.use('/brand', brandRouter)
 app.use('/product',productRouter)
 app.use('/jumboslider', jumboSliderRouter)
 app.use('/search',searchBoxRouter)
+app.use('/user',usersRouter)
 
 app.listen(port, ()=> console.log(` API JALAN DI PORT ${port} `))

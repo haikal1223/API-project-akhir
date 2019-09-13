@@ -15,7 +15,7 @@ module.exports={
         ON p.brandid = brand.id
         JOIN image_product img_p
         ON p.id = img_p.productid
-        where isdeleted=1 and p.name LIKE '%${req.query.search}%'`
+        where isdeleted=1 and p.name LIKE '%${req.query.search}%' OR brand.name LIKE '%${req.query.search}%'`
 
         conn.query(sql,(err,result) => {
             if(err) return res.status(500).send(err)
