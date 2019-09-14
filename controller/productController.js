@@ -23,6 +23,29 @@ module.exports = {
             return res.status(200).send(result)
         })
     },
+    getProductDetail: (req,res) => {
+        var sql = `SELECT
+                    p.id,
+                    p.name,
+                    p.price, 
+                    p.description,
+                    category.name AS category,
+                    brand.name AS brand,
+                    p.image AS image,
+                    p.stock
+                    FROM products p
+                    JOIN category
+                    ON p.categoryid = category.id
+                    JOIN brand
+                    ON p.brandid = brand.id
+                    where p.id=${req.params.id} and isdeleted=1`
+
+        conn.query(sql,(error,result) => {
+            if(error) return res.status(500).send(error)
+
+            return res.status(200).send(result)
+        })
+    },
     addProduct: (req,res) => {
         try {
             const path = '/post/images'; //file save path

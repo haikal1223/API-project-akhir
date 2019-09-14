@@ -4,11 +4,13 @@ const productRouter = require('./productRouter')
 const jumboSliderRouter = require('./jumboSliderRouter')
 const searchBoxRouter = require('./searchBoxRouter ')
 const usersRouter = require('./userRouter')
+const cartRouter = require('./cartRouter')
 module.exports = {
     categoryRouter,
     brandRouter,
     productRouter,
     jumboSliderRouter,
     searchBoxRouter,
-    usersRouter
+    usersRouter,
+    cartRouter
 }

@@ -5,7 +5,7 @@ module.exports = {
         // console.log(req.method)
         if (req.method !== "OPTIONS") {
             // let success = true;
-            jwt.verify(req.headers.authorization, "dota", (error, decoded) => {
+            jwt.verify(req.token, "dota", (error, decoded) => {
                 console.log('auth')
                 console.log(req.token)
                 console.log(req.headers.authorization)

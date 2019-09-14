@@ -24,7 +24,7 @@ module.exports = {
                     password: hashPassword,
                     email,
                     statusid: 1,
-                    roleid,
+                    roleid: 2,
                     lastLogin: new Date()
                 }
                 sql = `INSERT INTO users SET ?`;
@@ -46,7 +46,7 @@ module.exports = {
                             return res.status(500).send({status: 'error', err:err2})
                         }
 
-                        return res.status(200).send({username,email,statusid: 1,roleid})
+                        return res.status(200).send({username,email,statusid: 1})
                     })
                 })
             }
@@ -101,6 +101,7 @@ module.exports = {
     },
     login: (req,res) => {
         var {username, password} = req.body
+        console.log(req.body)
         var hashPassword = crypto.createHmac('sha256','theKey')
                                 .update(password).digest('hex')
         var sql = `SELECT * FROM users WHERE username='${username}' AND password='${hashPassword}'`
@@ -128,7 +129,7 @@ module.exports = {
 
             const token = createJWTToken({userId : result[0].id,username : result[0].username})
             
-            res.send({username : result[0].username,email : result[0].email,status : result[0].status, roleid: result[0].roleid,token})
+            res.status(200).send({username : result[0].username,email : result[0].email,status : result[0].status, roleid: result[0].roleid,token})
             // console.log(result);
             
         })
