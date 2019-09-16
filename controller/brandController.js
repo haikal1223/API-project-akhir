@@ -13,7 +13,7 @@ module.exports = {
         })
     },
     getCertainBrand: (req,res) => {
-        var sql = `select p.* from products p JOIN brand ON p.brandid= brand.id where brand.id = ${req.params.id} and isdeleted = 1`
+        var sql = `select p.* from products p JOIN brand ON p.brandid= brand.id where brand.id = ${req.params.id} and isdeleted = 0`
 
         conn.query(sql,(err,result) => {
             if (err) res.status(500).send(err)

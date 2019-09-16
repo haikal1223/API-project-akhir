@@ -9,13 +9,14 @@ module.exports = {
         category.name AS category,
         brand.name AS brand,
         p.image,
-        p.stock
+        p.stock,
+        p.discount
         FROM products p
         JOIN category
         ON p.categoryid = category.id
         JOIN brand
         ON p.brandid = brand.id
-        where isdeleted=1 `
+        where isdeleted=0 `
 
         conn.query(sql,(error,result)=>{
             if(error) return res.status(500).send(error)
@@ -38,7 +39,7 @@ module.exports = {
                     ON p.categoryid = category.id
                     JOIN brand
                     ON p.brandid = brand.id
-                    where p.id=${req.params.id} and isdeleted=1`
+                    where p.id=${req.params.id} and isdeleted=0`
 
         conn.query(sql,(error,result) => {
             if(error) return res.status(500).send(error)
@@ -91,16 +92,59 @@ module.exports = {
         }
     },
     editProducts: (req,res) => {
-        var sql = `UPDATE products SET ? WHERE id = ${req.params.id}`
-        conn.query(sql,req.body,(err,result) => {
-            if (err) return res.status(500).send(err)
+        var postId = req.params.id;
+        var sql = `SELECT * FROM products WHERE id = ${postId}`
+        conn.query(sql,(err,result)=>{
+            if(err) throw err;
 
-            sql = `SELECT * FROM products`
-            conn.query(sql,(err,result1) =>{
-                if (err) return res.status(500).send(err)
+            if(result.length > 0) {
+                const path = '/post/images'; //file save path
+                const upload = uploader(path,'POS').fields([{name:'image'}]); //uploader(path,default prefix)
 
-                res.status(200).send(result1)
-            })
+                upload(req,res,(err)=>{
+                    if(err){
+                        return res.status(500).json({message : 'Upload Picture Failed!', error:err.message})
+                    }
+                    const {image} = req.files // kalo file ga dikasih image jadi undefined
+                    // console.log(image);
+                    const imagePath = image ? path + '/' + image[0].filename : null;
+                    const data = JSON.parse(req.body.data)
+                    // console.log(data);
+                    
+
+                    try{
+                        if(imagePath) {
+                            data.image = imagePath;
+
+                        }
+                        sql = `UPDATE products SET ? WHERE id = ${postId}`
+                        conn.query(sql,data,(err1,result1)=>{
+                            if(err1) {
+                                if(imagePath){
+                                    fs.unlinkSync('./public' + imagePath);
+                                }
+                                return res.status(500).json({message : "There's an error on the server. Please contact the administrator.", error :err1.message})    
+                            }
+                            if(imagePath){
+                                fs.unlinkSync('./public' + result[0].image )
+                            }
+                            sql = `SELECT * FROM products`;
+                            conn.query(sql,(err2,result2)=>{
+                                if(err2){
+                                    return res.status(500).json({message : "There's an erro on the server. Please contact the administrator.",error : err1.message})
+                                }
+                                
+                                return res.status(200).send(result2)
+                            })
+                        })
+                    }
+                    catch(err){
+                        console.log(err.message);
+                        return res.status(500).json({message : "There's an erro on the server. Please contact the administrator.",error : err1.message})
+                        
+                    }
+                })
+            }
         })
     },
     deleteProducts: (req,res) => {

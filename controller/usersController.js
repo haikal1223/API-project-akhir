@@ -111,6 +111,7 @@ module.exports = {
             if(result.length === 0) {
                 return res.status(200).send({status: 'error', message: 'Username or Password Incorrect!'})
             }
+            console.log('ini result di login')
             console.log(result)
             const token = createJWTToken({userId: result[0].id, username: result[0].username})
             console.log(token)

@@ -11,7 +11,7 @@ module.exports = {
         })
     },
     getCertainCategory: (req,res) => {
-        var sql = `select p.* from products p JOIN category ON p.categoryid = category.id where category.id = ${req.params.id} and isdeleted = 1 `
+        var sql = `select p.* from products p JOIN category ON p.categoryid = category.id where category.id = ${req.params.id} and isdeleted = 0 `
         
         conn.query(sql,(err,result) => {
             if(err) return res.status(500).send(result) 

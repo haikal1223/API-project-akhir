@@ -8,11 +8,11 @@ module.exports = {
             jwt.verify(req.token, "dota", (error, decoded) => {
                 console.log('auth')
                 console.log(req.token)
-                console.log(req.headers.authorization)
                 if (error) {
                     // success = false;
                     return res.status(401).json({ message: "User not authorized.", error: "User not authorized." });
                 }
+                console.log('di bawah ini decoded')
                 console.log(decoded)
                 req.user = decoded;
                 next();
