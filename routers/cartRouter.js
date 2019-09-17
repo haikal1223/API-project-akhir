@@ -6,6 +6,6 @@ const { auth } = require('../helpers/auth')
 
 router.post('/addcart', cartController.AddCart)
 router.get('/getcart',auth,cartController.getCart)
-router.post('/addtransaction', cartController.addCheckout)
+router.post('/addtransaction', cartController.addCheckOut)
 router.get('/gettransaction/:username', cartController.getTransaction)
 module.exports = router
