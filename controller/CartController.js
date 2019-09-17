@@ -96,5 +96,26 @@ module.exports ={
 
             return res.status(200).send(result)
         })
+    },
+    deleteCart: (req,res) => {
+        console.log(req.body)
+        var {username, productid} = req.body
+        var sql = `UPDATE cart SET isdeleted = 1 WHERE productid=${productid} and username='${username}' and isdeleted=0`
+
+        conn.query(sql,(err,result) => {
+            if(err) res.status(500).send(err)
+            console.log(result)
+
+             sql = `SELECT c.id, c.productid, c.qty, c.price, c.totalprice, p.name
+            FROM cart c JOIN products p ON c.productid = p.id WHERE c.username='${username}' and c.isdeleted = 0`
+            conn.query(sql,(err,hasilCartUser) => {
+                if(err) return res.status(500).send(err)
+                console.log(hasilCartUser)
+                return res.status(200).send({
+                    cartUser: hasilCartUser,
+                    cartCount: hasilCartUser.length
+                })
+            })
+        })
     }
 }
