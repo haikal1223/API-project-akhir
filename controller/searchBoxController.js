@@ -6,16 +6,14 @@ module.exports={
         p.price, p.description,
         category.name AS category,
         brand.name AS brand,
-        img_p.image AS images,
+        p.image AS images,
         p.stock
         FROM products p
         JOIN category
         ON p.categoryid = category.id
         JOIN brand
         ON p.brandid = brand.id
-        JOIN image_product img_p
-        ON p.id = img_p.productid
-        where isdeleted=1 and p.name LIKE '%${req.query.search}%' OR brand.name LIKE '%${req.query.search}%'`
+        where isdeleted=0 and p.name LIKE '%${req.query.search}%' OR brand.name LIKE '%${req.query.search}%'`
 
         conn.query(sql,(err,result) => {
             if(err) return res.status(500).send(err)

@@ -5,6 +5,8 @@ const jumboSliderController = require('./jumboSliderController')
 const searchBoxController = require('./searchBoxController')
 const usersController = require('./usersController')
 const cartController = require('./CartController')
+const transactionController = require('./TransactionController')
+
 module.exports = {
     categoryController,
     brandController,
@@ -12,5 +14,6 @@ module.exports = {
     jumboSliderController,
     searchBoxController,
     usersController,
-    cartController
+    cartController,
+    transactionController
 }

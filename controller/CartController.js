@@ -97,6 +97,14 @@ module.exports ={
             return res.status(200).send(result)
         })
     },
+    getTransactionAdmin:(req,res) => {
+        var sql = `SELECT * FROM transaction `
+        conn.query(sql,(err,result) => {
+            if(err) res.status(500).send(err)
+
+            return res.status(200).send(result)
+        })
+    },
     deleteCart: (req,res) => {
         console.log(req.body)
         var {username, productid} = req.body
@@ -116,6 +124,14 @@ module.exports ={
                     cartCount: hasilCartUser.length
                 })
             })
+        })
+    },
+    getTransactionDetail: (req,res) => {
+        var sql = `SELECT ti.transactionid, ti.qty, ti.harga, ti.productid, p.name FROM transaction_item ti LEFT JOIN products p ON ti.productid = p.id  where ti.transactionid=${req.params.id}`
+        conn.query(sql,(err,result) => {
+            if(err) res.status(500).send(err)
+
+            return res.status(200).send(result)
         })
     }
 }

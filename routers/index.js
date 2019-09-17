@@ -5,6 +5,7 @@ const jumboSliderRouter = require('./jumboSliderRouter')
 const searchBoxRouter = require('./searchBoxRouter ')
 const usersRouter = require('./userRouter')
 const cartRouter = require('./cartRouter')
+const transactionRouter = require('./transactionRouter')
 module.exports = {
     categoryRouter,
     brandRouter,
@@ -12,5 +13,6 @@ module.exports = {
     jumboSliderRouter,
     searchBoxRouter,
     usersRouter,
-    cartRouter
+    cartRouter,
+    transactionRouter
 }

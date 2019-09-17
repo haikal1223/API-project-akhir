@@ -13,7 +13,16 @@ app.use(bodyParser.urlencoded({extended : false}))
 app.use(express.static('public'))//munculin gambar kalo pake multer
 app.use(bearerToken())
 
-const { categoryRouter, brandRouter, productRouter, jumboSliderRouter, searchBoxRouter, usersRouter,cartRouter } = require('./routers')
+const { 
+    categoryRouter, 
+    brandRouter, 
+    productRouter, 
+    jumboSliderRouter, 
+    searchBoxRouter, 
+    usersRouter, 
+    cartRouter ,
+    transactionRouter
+    } = require('./routers')
 app.use('/category',categoryRouter)
 app.use('/brand', brandRouter)
 app.use('/product',productRouter)
@@ -21,5 +30,6 @@ app.use('/jumboslider', jumboSliderRouter)
 app.use('/search',searchBoxRouter)
 app.use('/user',usersRouter)
 app.use('/cart',cartRouter)
+app.use('/transaction',transactionRouter)
 
 app.listen(port, ()=> console.log(` API JALAN DI PORT ${port} `))

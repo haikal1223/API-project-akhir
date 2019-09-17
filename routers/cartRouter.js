@@ -9,4 +9,6 @@ router.get('/getcart',auth,cartController.getCart)
 router.post('/addtransaction', cartController.addCheckOut)
 router.get('/gettransaction/:username', cartController.getTransaction)
 router.put('/deletecart', cartController.deleteCart)
+router.get('/gettransactionadmin',cartController.getTransactionAdmin)
+router.get('/gettransactiondetail/:id',cartController.getTransactionDetail)
 module.exports = router
