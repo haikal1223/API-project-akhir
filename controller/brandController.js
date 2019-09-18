@@ -4,7 +4,7 @@ const fs = require('fs')
 
 module.exports = {
     getBrand: (req,res) => {
-        var sql = 'SELECT * FROM brand'
+        var sql = 'SELECT * FROM brand WHERE isdeleted = 0'
 
         conn.query(sql,(err,result) => {
             if (err) res.status(500).send(err)
@@ -13,7 +13,7 @@ module.exports = {
         })
     },
     getCertainBrand: (req,res) => {
-        var sql = `select p.* from products p JOIN brand ON p.brandid= brand.id where brand.id = ${req.params.id} and isdeleted = 0`
+        var sql = `select p.* from products p JOIN brand ON p.brandid= brand.id where brand.id = ${req.params.id} and p.isdeleted = 0`
 
         conn.query(sql,(err,result) => {
             if (err) res.status(500).send(err)
@@ -49,7 +49,7 @@ module.exports = {
                     }
                    
                     console.log(results);
-                    sql = `SELECT * FROM brand `;
+                    sql = `SELECT * FROM brand WHERE isdeleted=0 `;
                     conn.query(sql, (err, results) => {
                         if(err) {
                             console.log(err.message);
@@ -103,7 +103,7 @@ module.exports = {
                             if(imagePath){
                                 fs.unlinkSync('./public' + result[0].logo )
                             }
-                            sql = `SELECT * FROM brand`;
+                            sql = `SELECT * FROM brand WHERE isdeleted=0`;
                             conn.query(sql,(err2,result2)=>{
                                 if(err2){
                                     return res.status(500).json({message : "There's an erro on the server. Please contact the administrator.",error : err1.message})
@@ -124,7 +124,7 @@ module.exports = {
     },
     deleteBrand: (req,res) => {
         console.log(req.body)
-        var sql = `DELETE from brand Where id = ${req.params.id}`
+        var sql = `UPDATE brand SET isdeleted=1 Where id = ${req.params.id}`
         conn.query(sql,(err,result) => {
             if (err) res.status(500).send(err)
 

@@ -2,7 +2,7 @@ const conn = require('../database')
 
 module.exports = {
     getCategory: (req,res) => {
-        var sql = `SELECT * FROM category `
+        var sql = `SELECT * FROM category where isdeleted=0`
 
         conn.query(sql,(error,result)=>{
             if(error) return res.status(500).send(error)
@@ -11,7 +11,7 @@ module.exports = {
         })
     },
     getCertainCategory: (req,res) => {
-        var sql = `select p.* from products p JOIN category ON p.categoryid = category.id where category.id = ${req.params.id} and isdeleted = 0 `
+        var sql = `select p.* from products p JOIN category ON p.categoryid = category.id where category.id = ${req.params.id} and p.isdeleted = 0 `
         
         conn.query(sql,(err,result) => {
             if(err) return res.status(500).send(result) 
@@ -25,7 +25,7 @@ module.exports = {
         conn.query(sql,data,(err,result) => {
             if(err) return res.status(500).send(err)
 
-            var sql = `SELECT * FROM category`
+            var sql = `SELECT * FROM category where isdeleted = 0`
             conn.query(sql,(err1,result) => {
                 if (err1) return res.status(500).send(err1)
 
@@ -38,7 +38,7 @@ module.exports = {
         conn.query(sql,req.body,(err,result) => {
             if (err) return res.status(500).send(err)
 
-            sql = `SELECT * FROM category`
+            sql = `SELECT * FROM category where isdeleted = 0`
             conn.query(sql,(err,result1) =>{
                 if (err) return res.status(500).send(err)
 
@@ -51,7 +51,7 @@ module.exports = {
         conn.query(sql,(err,result) => {
             if (err) return res.status(500).send(err)
 
-            sql = `SELECT * FROM category`
+            sql = `SELECT * FROM category WHERE isdeleted=0`
             conn.query(sql,(err,result1) =>{
                 if (err) return res.status(500).send(err)
 

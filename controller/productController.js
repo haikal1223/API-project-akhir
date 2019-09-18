@@ -16,7 +16,7 @@ module.exports = {
         ON p.categoryid = category.id
         JOIN brand
         ON p.brandid = brand.id
-        where isdeleted=0 `
+        where p.isdeleted=0 `
 
         conn.query(sql,(error,result)=>{
             if(error) return res.status(500).send(error)
@@ -24,12 +24,35 @@ module.exports = {
             return res.status(200).send(result)
         })
     },
+
+    getRecentProduct: (req,res) => {
+        var sql = `SELECT p.id, p.name,
+        p.price, p.description,
+        category.name AS category,
+        brand.name AS brand,
+        p.image,
+        p.stock,
+        p.discount
+        FROM products p
+        JOIN category
+        ON p.categoryid = category.id
+        JOIN brand
+        ON p.brandid = brand.id
+        where p.isdeleted=0  ORDER BY p.id desc `
+        conn.query(sql,(error,result)=>{
+            if(error) return res.status(500).send(error)
+
+            return res.status(200).send(result)
+        })
+
+    },
     getProductDetail: (req,res) => {
         var sql = `SELECT
                     p.id,
                     p.name,
                     p.price, 
                     p.description,
+                    p.discount,
                     category.name AS category,
                     brand.name AS brand,
                     p.image AS image,
@@ -39,7 +62,7 @@ module.exports = {
                     ON p.categoryid = category.id
                     JOIN brand
                     ON p.brandid = brand.id
-                    where p.id=${req.params.id} and isdeleted=0`
+                    where p.id=${req.params.id} and p.isdeleted=0`
 
         conn.query(sql,(error,result) => {
             if(error) return res.status(500).send(error)
@@ -75,7 +98,7 @@ module.exports = {
                     }
                    
                     console.log(results);
-                    sql = `SELECT * FROM products `;
+                    sql = `SELECT * FROM products where isdeleted=0 `;
                     conn.query(sql, (err, results) => {
                         if(err) {
                             console.log(err.message);
@@ -140,7 +163,7 @@ module.exports = {
                             ON p.categoryid = category.id
                             JOIN brand
                             ON p.brandid = brand.id
-                            where isdeleted=0 `;
+                            where p.isdeleted=0 `;
                             conn.query(sql,(err2,result2)=>{
                                 if(err2){
                                     return res.status(500).json({message : "There's an error on the server. Please contact the administrator.",error : err1.message})
@@ -160,7 +183,7 @@ module.exports = {
         })
     },
     deleteProducts: (req,res) => {
-        var sql = `DELETE from products WHERE id = ${req.params.id}`
+        var sql = `UPDATE products SET isdeleted = 1 WHERE id = ${req.params.id}`
         conn.query(sql,(err,result) => {
             if (err) return res.status(500).send(err)
 

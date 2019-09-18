@@ -9,10 +9,9 @@ module.exports = {
         conn.query(sql,(err,result) => {
             if(err) return res.status(500).send(err)
 
-            // sql = `UPDATE products SET stock=stock-${req.body.qty}`
+           res.status(200).send(result)
         
-            return res.status(200).send(result)
-        })
+         })
     },  
     uploadImagePayment: (req,res) => {
         try {
@@ -50,7 +49,13 @@ module.exports = {
         conn.query(sql,(err,result) => {
             if(err) return res.status(500).send(err)
 
-            return res.status(200).send(result)
+            sql = `UPDATE products p JOIN transaction_item ti ON p.id = ti.productid
+                JOIN transaction t ON t.id =ti.transactionid SET stock= stock-qty Where ti.transactionid=${req.params.id}`
+
+            conn.query(sql,(err,result1) => {
+            if(err) return res.status(500).send(err)
+                return res.status(200).send(result1)
+            })
         })
     },
 
