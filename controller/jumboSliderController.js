@@ -25,12 +25,8 @@ module.exports = {
                 const { image } = req.files;//image nya sama kaya di ui
                 console.log(image)
                 const imagePath = image ? path + '/' + image[0].filename : null;
-                console.log(imagePath)
-    
-                console.log(req.body.data)
-                const data = JSON.parse(req.body.data);
-                console.log(data)
-                data.image = imagePath;
+                const data = { image: imagePath}
+                // data.image = imagePath;
                 var sql = 'INSERT INTO jumbo_slider SET ?';
                 conn.query(sql, data, (err, results) => {
                     if(err) {
@@ -55,5 +51,14 @@ module.exports = {
         } catch(err) {
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
         }
+    },
+    deleteSlider:(req,res) => {
+        var sql = `DELETE FROM jumbo_slider WHERE id=${req.params.id}`
+
+        conn.query(sql,(err,result) => {
+            if(err) return res.status(500).send(err)
+
+            return res.status(200).send(result)
+        })
     }
 }
