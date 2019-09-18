@@ -128,10 +128,22 @@ module.exports = {
                             if(imagePath){
                                 fs.unlinkSync('./public' + result[0].image )
                             }
-                            sql = `SELECT * FROM products`;
+                            sql = `SELECT p.id, p.name,
+                            p.price, p.description,
+                            category.name AS category,
+                            brand.name AS brand,
+                            p.image,
+                            p.stock,
+                            p.discount
+                            FROM products p
+                            JOIN category
+                            ON p.categoryid = category.id
+                            JOIN brand
+                            ON p.brandid = brand.id
+                            where isdeleted=0 `;
                             conn.query(sql,(err2,result2)=>{
                                 if(err2){
-                                    return res.status(500).json({message : "There's an erro on the server. Please contact the administrator.",error : err1.message})
+                                    return res.status(500).json({message : "There's an error on the server. Please contact the administrator.",error : err1.message})
                                 }
                                 
                                 return res.status(200).send(result2)

@@ -9,7 +9,9 @@ module.exports = {
         conn.query(sql,(err,result) => {
             if(err) return res.status(500).send(err)
 
-            // sql = `UPDATE products SET stock= stock-${req.body.qty}`
+            // sql = `UPDATE products SET stock=stock-${req.body.qty}`
+        
+            return res.status(200).send(result)
         })
     },  
     uploadImagePayment: (req,res) => {
@@ -40,5 +42,34 @@ module.exports = {
         } catch(err) {
             return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
         }
+    },
+
+    statusPackageDelivered: (req,res) => {
+        var sql=`UPDATE transaction SET status = 'package delivered' WHERE id= ${req.params.id}`
+        
+        conn.query(sql,(err,result) => {
+            if(err) return res.status(500).send(err)
+
+            return res.status(200).send(result)
+        })
+    },
+
+    statusPackageReceived: (req,res) => {
+        var sql=`UPDATE transaction SET status = 'package received' WHERE id=${req.params.id}`
+
+        conn.query(sql,(err,result) => {
+            if(err) return res.status(500).send(err)
+
+            return res.status(200).send(result)
+        })
+    },
+
+    statusRejectedByAdmin: (req,res) => {
+        var sql =`UPDATE transaction SET  status ='rejected by admin' WHERE id=${req.params.id}`
+        conn.query(sql,(err,result) => {
+            if(err) return res.status(500).send(err)
+
+            return res.status(200).send(result)
+        })
     }
 }

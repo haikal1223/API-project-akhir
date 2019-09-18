@@ -6,7 +6,7 @@ module.exports={
         p.price, p.description,
         category.name AS category,
         brand.name AS brand,
-        p.image AS images,
+        p.image,
         p.stock
         FROM products p
         JOIN category
