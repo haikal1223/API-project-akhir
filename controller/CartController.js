@@ -98,7 +98,7 @@ module.exports ={
         })
     },
     getTransactionAdmin:(req,res) => {
-        var sql = `SELECT * FROM transaction `
+        var sql = `SELECT t.*, ti.productid, ti.harga, ti.qty FROM transaction t JOIN transaction_item ti ON t.id = ti.transactionid JOIN products p ON ti.productid = p.id`
         conn.query(sql,(err,result) => {
             if(err) res.status(500).send(err)
 
@@ -127,7 +127,7 @@ module.exports ={
         })
     },
     getTransactionDetail: (req,res) => {
-        var sql = `SELECT ti.transactionid, ti.qty, ti.harga, ti.productid, p.name FROM transaction_item ti LEFT JOIN products p ON ti.productid = p.id  where ti.transactionid=${req.params.id}`
+        var sql = `SELECT ti.transactionid, ti.qty, ti.harga, ti.productid, p.name FROM transaction_item ti LEFT JOIN products p ON ti.productid = p.id JOIN transaction t ON ti.transactionid = t.id where ti.transactionid=${req.params.id}`
         conn.query(sql,(err,result) => {
             if(err) res.status(500).send(err)
 
