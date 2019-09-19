@@ -6,6 +6,7 @@ module.exports={
         console.log(req.query.search)
         var sql = `SELECT p.id, p.name,
         p.price, p.description,
+        p.discount,
         category.name AS category,
         brand.name AS brand,
         p.image,
