@@ -2,6 +2,8 @@ const conn = require('../database')
 
 module.exports={
     getSearched: (req,res) => {
+        console.log('ini query search')
+        console.log(req.query.search)
         var sql = `SELECT p.id, p.name,
         p.price, p.description,
         category.name AS category,
@@ -13,7 +15,7 @@ module.exports={
         ON p.categoryid = category.id
         JOIN brand
         ON p.brandid = brand.id
-        where isdeleted=0 and p.name LIKE '%${req.query.search}%' OR brand.name LIKE '%${req.query.search}%'`
+        where p.isdeleted=0 and p.name LIKE '%${req.query.search}%' OR brand.name LIKE '%${req.query.search}%'`
 
         conn.query(sql,(err,result) => {
             if(err) return res.status(500).send(err)
