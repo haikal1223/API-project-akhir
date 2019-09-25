@@ -98,7 +98,8 @@ module.exports ={
         })
     },
     getTransactionAdmin:(req,res) => {
-        var sql = `SELECT t.*, ti.productid, ti.harga, ti.qty FROM transaction t JOIN transaction_item ti ON t.id = ti.transactionid JOIN products p ON ti.productid = p.id`
+        var sql = `SELECT t.*, ti.productid, ti.transactionid, count(ti.transactionid), ti.harga, ti.qty FROM transaction t JOIN transaction_item ti 
+        ON t.id = ti.transactionid JOIN products p ON ti.productid = p.id group by recipient `
         conn.query(sql,(err,result) => {
             if(err) res.status(500).send(err)
 
