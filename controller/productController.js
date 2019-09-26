@@ -4,6 +4,12 @@ const fs = require('fs')
 
 module.exports = {
     getAll: (req,res) => {
+        if(!req.query.page){
+            req.query.page=1
+        }
+
+        offset = req.query.page * 6 - 6
+
         var sql = `SELECT p.id, p.name,
         p.price, p.description,
         category.name AS category,
@@ -21,7 +27,17 @@ module.exports = {
         conn.query(sql,(error,result)=>{
             if(error) return res.status(500).send(error)
 
-            return res.status(200).send(result)
+            sql+= `limit ${offset}, 6`
+
+        conn.query(sql,(error,result1) => {
+            if(error) return res.status(500).send(error)
+
+            res.status(200).send({
+                dataProduct: result1,
+                totalPages:result.length,
+                pages: Number(req.query.page)
+            })
+            })
         })
     },
 

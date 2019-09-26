@@ -12,6 +12,15 @@ module.exports = {
             return res.status(200).send(result)
         })
     },
+    getBrandHome: (req,res) => {
+        var sql = 'SELECT * FROM brand WHERE isdeleted = 0 limit 0,3'
+
+        conn.query(sql,(err,result) => {
+            if(err) res.status(500).send(err)
+
+            return res.status(200).send(result)
+        })
+    },
     getCertainBrand: (req,res) => {
         var sql = `select p.* from products p JOIN brand ON p.brandid= brand.id where brand.id = ${req.params.id} and p.isdeleted = 0`
 
