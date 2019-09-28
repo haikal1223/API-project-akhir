@@ -41,6 +41,28 @@ module.exports = {
         })
     },
 
+    getRandomProduct: (req,res) => {
+        var sql = `SELECT p.id, p.name,
+        p.price, p.description,
+        category.name AS category,
+        brand.name AS brand,
+        p.image,
+        p.stock,
+        p.discount
+        FROM products p
+        JOIN category
+        ON p.categoryid = category.id
+        JOIN brand
+        ON p.brandid = brand.id
+        where p.isdeleted=0 order by RAND()`
+
+        conn.query(sql,(err,result) => {
+            if(err) return res.status(500).send(err)
+
+            return res.status(200).send(result)
+        })
+    },
+
     getDiscountProduct: (req,res) => {
         if(!req.query.page){
             req.query.page=1
@@ -123,6 +145,8 @@ module.exports = {
                     p.description,
                     p.discount,
                     category.name AS category,
+                    category.id as categoryid,
+                    brand.id as brandid,
                     brand.name AS brand,
                     p.image AS image,
                     p.stock
