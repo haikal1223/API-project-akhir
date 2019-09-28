@@ -11,13 +11,29 @@ module.exports = {
         })
     },
     getCertainCategory: (req,res) => {
+        if(!req.query.page){
+            req.query.page=1
+        }
+
+        offset = req.query.page * 6 - 6
+
         var sql = `select p.* from products p JOIN category ON p.categoryid = category.id where category.id = ${req.params.id} and p.isdeleted = 0 `
         
         conn.query(sql,(err,result) => {
             if(err) return res.status(500).send(result) 
 
-            return res.status(200).send(result)
-        })
+            sql+= `limit ${offset}, 6`
+
+            conn.query(sql,(error,result1) => {
+                if(error) return res.status(500).send(error)
+    
+                res.status(200).send({
+                    dataProduct: result1,
+                    totalPagesCat:result.length,
+                    pagesCat: Number(req.query.page)
+                })
+                })
+        });
     },
     addCategory: (req,res) => {
         var data = req.body
