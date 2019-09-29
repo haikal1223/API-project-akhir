@@ -98,12 +98,27 @@ module.exports ={
         })
     },
     getTransactionAdmin:(req,res) => {
+        if(!req.query.page){
+            req.query.page=1
+        }
+
+        offset = req.query.page * 10 - 10
+        
         var sql = `SELECT t.*, ti.productid, ti.transactionid, count(ti.transactionid), ti.harga, ti.qty FROM transaction t JOIN transaction_item ti 
-        ON t.id = ti.transactionid JOIN products p ON ti.productid = p.id group by recipient `
+        ON t.id = ti.transactionid JOIN products p ON ti.productid = p.id group by ti.transactionid `
         conn.query(sql,(err,result) => {
             if(err) res.status(500).send(err)
 
-            return res.status(200).send(result)
+            sql+= `limit ${offset}, 10`
+            conn.query(sql,(error,result1) => {
+                if(error) return res.status(500).send(error)
+    
+                res.status(200).send({
+                    dataProduct: result1,
+                    totalPages:result.length,
+                    pages: Number(req.query.page)
+                })
+                })
         })
     },
     deleteCart: (req,res) => {
