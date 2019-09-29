@@ -11,11 +11,11 @@ module.exports = {
         })
     },
     getCertainCategory: (req,res) => {
-        if(!req.query.page){
-            req.query.page=1
+        if(!req.params.page){
+            req.params.page=1
         }
 
-        offset = req.query.page * 6 - 6
+        offset = req.params.page * 6 - 6
 
         var sql = `select p.* from products p JOIN category ON p.categoryid = category.id where category.id = ${req.params.id} and p.isdeleted = 0 `
         
@@ -30,7 +30,7 @@ module.exports = {
                 res.status(200).send({
                     dataProduct: result1,
                     totalPagesCat:result.length,
-                    pagesCat: Number(req.query.page)
+                    pagesCat: Number(req.params.page)
                 })
                 })
         });
