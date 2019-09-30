@@ -89,12 +89,28 @@ module.exports ={
         })
     },
     getTransaction: (req,res) => {
+        if(!req.params.page){
+            req.params.page=1
+        }
+
+        offset = req.params.page * 10 - 10
         var sql = `SELECT * FROM transaction WHERE username='${req.params.username}'`
 
         conn.query(sql,(err,result) => {
             if(err) res.status(500).send(err)
 
-            return res.status(200).send(result)
+            
+            sql+= `limit ${offset}, 10`
+            conn.query(sql,(error,result1) => {
+                if(error) return res.status(500).send(error)
+    
+                res.status(200).send({
+                    dataProduct: result1,
+                    totalPages:result.length,
+                    pages: Number(req.params.page)
+                })
+                })
+           
         })
     },
     getTransactionAdmin:(req,res) => {
@@ -104,9 +120,35 @@ module.exports ={
 
         offset = req.query.page * 10 - 10
         
-        var sql = `SELECT t.*, ti.productid, ti.transactionid, count(ti.transactionid), ti.harga, ti.qty FROM transaction t JOIN transaction_item ti 
-        ON t.id = ti.transactionid JOIN products p ON ti.productid = p.id group by ti.transactionid `
+        var sql = ` SELECT t.*, ti.productid, ti.transactionid, count(ti.transactionid), ti.harga, ti.qty FROM transaction t JOIN transaction_item ti 
+        ON t.id = ti.transactionid JOIN products p ON ti.productid = p.id where t.status = 'waitingConfirmation'
+         or t.status = 'accepted by admin' or t.status = 'image being checked' or t.status ='package delivered'  group by ti.transactionid  `
         conn.query(sql,(err,result) => {
+            if(err) res.status(500).send(err)
+
+            sql+= `limit ${offset}, 10`
+            conn.query(sql,(error,result1) => {
+                if(error) return res.status(500).send(error)
+    
+                res.status(200).send({
+                    dataProduct: result1,
+                    totalPages:result.length,
+                    pages: Number(req.query.page)
+                })
+                })
+        })
+    },
+    getHistoryTransactionAdmin:(req,res) => {
+        if(!req.query.page){
+            req.query.page=1
+        }
+
+        offset = req.query.page * 10 - 10
+        
+        var sql = `SELECT t.*, ti.productid, ti.transactionid, count(ti.transactionid), ti.harga, ti.qty FROM transaction t JOIN transaction_item ti 
+        ON t.id = ti.transactionid JOIN products p ON ti.productid = p.id where t.status = 'rejected by admin'
+         or t.status = 'package received'   group by ti.transactionid `
+         conn.query(sql,(err,result) => {
             if(err) res.status(500).send(err)
 
             sql+= `limit ${offset}, 10`
@@ -143,7 +185,9 @@ module.exports ={
         })
     },
     getTransactionDetail: (req,res) => {
-        var sql = `SELECT ti.transactionid, ti.qty, ti.harga, ti.productid, p.name FROM transaction_item ti LEFT JOIN products p ON ti.productid = p.id JOIN transaction t ON ti.transactionid = t.id where ti.transactionid=${req.params.id}`
+     
+        var sql = `SELECT ti.transactionid, ti.qty, ti.harga, ti.productid, p.name,
+        t.recipient, t.adress, t.city, t.phone,t.zip FROM transaction_item ti LEFT JOIN products p ON ti.productid = p.id JOIN transaction t ON ti.transactionid = t.id where ti.transactionid=${req.params.id}`
         conn.query(sql,(err,result) => {
             if(err) res.status(500).send(err)
 

@@ -13,7 +13,7 @@ module.exports = {
         })
     },
     getBrandHome: (req,res) => {
-        var sql = 'SELECT * FROM brand WHERE isdeleted = 0 limit 0,3'
+        var sql = 'SELECT * FROM brand WHERE isdeleted = 0  order by RAND()'
 
         conn.query(sql,(err,result) => {
             if(err) res.status(500).send(err)
