@@ -82,7 +82,7 @@ module.exports = {
         ON p.categoryid = category.id
         JOIN brand
         ON p.brandid = brand.id
-        where p.isdeleted=0 and p.discount > 0 `
+        where p.isdeleted=0 and p.discount > 0 order by rand()`
         conn.query(sql,(error,result)=>{
             if(error) return res.status(500).send(error)
 
@@ -98,6 +98,35 @@ module.exports = {
             })
             })
         })
+    },
+
+    getBrandCat: (req,res) => {
+        if(!req.params.page){
+            req.params.page=1
+        }
+
+        offset = req.params.page * 6 - 6
+        var sql = `select c.name, b.name, p.* from products p join
+        category c on p.categoryid = c.id join brand b on p.brandid = b.id where b.id=${req.params.brandid} and c.id=${req.params.catid} `
+        
+        conn.query(sql,(err,result) => {
+            console.log(req.params.brandid)
+            console.log(req.params.catid)
+            if(err) return res.status(500).send(err)
+
+            sql+= `limit ${offset}, 6`
+
+            conn.query(sql,(error,result1) => {
+                if(error) return res.status(500).send(error)
+    
+                res.status(200).send({
+                    dataProduct: result1,
+                    totalPages:result.length,
+                    pages: Number(req.params.page)
+                })
+                })
+        })
+
     },
 
     getRecentProduct: (req,res) => {
